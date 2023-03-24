@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:padding="40dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvRed"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <SeekBar
+            android:id="@+id/sbRed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#FF0000"
+            android:max="255"
+            android:min="0"
+            android:progressBackgroundTint="#FF0000"
+            android:progressTint="#FF0000"
+            android:secondaryProgressTint="#FF0000"
+            android:thumbTint="#FF0000"
+            app:tickMarkTint="#FF0000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="40dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvGreen"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <SeekBar
+            android:id="@+id/sbGreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#00FF00"
+            android:max="255"
+            android:min="0"
+            android:progressBackgroundTint="#00FF00"
+            android:progressTint="#00FF00"
+            android:secondaryProgressTint="#00FF00"
+            android:thumbTint="#00FF00"
+            app:tickMarkTint="#00FF00" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="40dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvBlue"
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <SeekBar
+            android:id="@+id/sbBlue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#0000FF"
+            android:max="255"
+            android:min="0"
+            android:progressBackgroundTint="#0000FF"
+            android:progressTint="#0000FF"
+            android:secondaryProgressTint="#0000FF"
+            android:thumbTint="#0000FF"
+            app:tickMarkTint="#0000FF" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llColor"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+
+            <TextView
+                android:id="@+id/tvHexadecimal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="24sp"
+                android:text=""
+                app:drawableTint="@color/white" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>
