@@ -77,9 +77,7 @@ class MainActivity : AppCompatActivity() {
             //
             val btnAdjFrmCancel = view.findViewById<Button>(R.id.btnAdjFrmCancel)
             val btnAdjFrmSave = view.findViewById<Button>(R.id.btnAdjFrmSave)
-            btnAdjFrmCancel.visibility = View.INVISIBLE
-            btnAdjFrmSave.visibility = View.INVISIBLE
-            //
+
 
             val tvHexadecimal = view.findViewById<TextView>(R.id.tvHexadecimal)
 
@@ -104,26 +102,6 @@ class MainActivity : AppCompatActivity() {
             sbRed.setOnSeekBarChangeListener(colorSeekBarChangeListener)
             sbGreen.setOnSeekBarChangeListener(colorSeekBarChangeListener)
             sbBlue.setOnSeekBarChangeListener(colorSeekBarChangeListener)
-
-            val builder = AlertDialog.Builder(this@MainActivity).apply {
-                setTitle("Editar")
-                setView(view)
-                val tone = this@MainActivity.tones[position]
-                sbRed.progress = tone.getRed()
-                sbGreen.progress = tone.getGreen()
-                sbBlue.progress = tone.getBlue()
-                tvHexadecimal.text = tone.getName()
-                setPositiveButton("Salvar") { _, _ ->
-                    val redValue = sbRed.progress
-                    val greenValue = sbGreen.progress
-                    val blueValue = sbBlue.progress
-
-                    tone.toneGenerator(redValue, greenValue, blueValue)
-                    (this@MainActivity.rvMainTones.adapter as MyAdapter).notifyDataSetChanged()
-                }
-                setNegativeButton("Cancelar", null)
-            }
-            builder.create().show()
 
         }
     }
