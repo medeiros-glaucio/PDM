@@ -5,25 +5,20 @@ import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.appcompat.app.AlertDialog
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var rvMainTones: RecyclerView
     private lateinit var fabMainAdd: FloatingActionButton
     private var tones: MutableList<Tone>
+    private var local: Int = 0
 
     init {
         this.tones = mutableListOf()
@@ -36,12 +31,6 @@ class MainActivity : AppCompatActivity() {
         this.rvMainTones = findViewById(R.id.rvMainTones)
         this.fabMainAdd = findViewById(R.id.fabMainAdd)
 
-        val adapter = MyAdapter(this.tones)
-        adapter.onItemClick = OnItemClick()
-        this.rvMainTones.adapter = adapter
-
-        ItemTouchHelper(OnSwipe()).attachToRecyclerView((this.rvMainTones))
-
         var formResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if (it.resultCode == RESULT_OK){
                 val tone = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -50,8 +39,10 @@ class MainActivity : AppCompatActivity() {
                     it.data?.getSerializableExtra("COR")
                 } as Tone
                 (this.rvMainTones.adapter as MyAdapter).add(tone)
+                prepareTone()
             }
         }
+
 
         this.fabMainAdd.setOnClickListener{
             val intent = Intent()
@@ -59,50 +50,43 @@ class MainActivity : AppCompatActivity() {
             formResult.launch(intent)
         }
 
+        prepareTone()
+
+        ItemTouchHelper(OnSwipe()).attachToRecyclerView((this.rvMainTones))
+
+    }
+
+    fun prepareTone(){
+        this.rvMainTones.adapter = MyAdapter(this.tones)
+
+        (this.rvMainTones.adapter as MyAdapter).onItemClick = OnItemClick()
     }
 
     inner class OnItemClick: OnItemClickRecyclerView{
-        override fun onItemClick(position: Int) {
+        override fun onItemClick(position: Int): Boolean {
 
-            val intent = Intent()
-            intent.action = "NOVACOR"
-            startActivity(intent)
+            local = position
+            locateTone()
+            return true
+        }
+    }
 
-            val inflater = LayoutInflater.from(this@MainActivity)
-            val view = inflater.inflate(R.layout.activity_adjustment_form, null)
-            val sbRed = view.findViewById<SeekBar>(R.id.sbRed)
-            val sbGreen = view.findViewById<SeekBar>(R.id.sbGreen)
-            val sbBlue = view.findViewById<SeekBar>(R.id.sbBlue)
-            val llTone = view.findViewById<LinearLayout>(R.id.llTone)
-            //
-            val btnAdjFrmCancel = view.findViewById<Button>(R.id.btnAdjFrmCancel)
-            val btnAdjFrmSave = view.findViewById<Button>(R.id.btnAdjFrmSave)
+    fun locateTone() {
+        var tone = this@MainActivity.tones.get(local)
+        val intent = Intent(this, ToneAdjustmentForm :: class.java)
+        intent.putExtra("COR", tone)
+        formResult.launch(intent)
+    }
 
-
-            val tvHexadecimal = view.findViewById<TextView>(R.id.tvHexadecimal)
-
-            val colorSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    val redValue = sbRed.progress
-                    val greenValue = sbGreen.progress
-                    val blueValue = sbBlue.progress
-                    val color = Color.rgb(redValue, greenValue, blueValue)
-                    llTone.setBackgroundColor(color)
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar) {
-                    // Nihil
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-                    // Nihil
-                }
-            }
-
-            sbRed.setOnSeekBarChangeListener(colorSeekBarChangeListener)
-            sbGreen.setOnSeekBarChangeListener(colorSeekBarChangeListener)
-            sbBlue.setOnSeekBarChangeListener(colorSeekBarChangeListener)
-
+    var formResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        if (it.resultCode == RESULT_OK){
+            val tone = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.data?.getSerializableExtra("COR", Tone::class.java)
+            } else {
+                it.data?.getSerializableExtra("COR")
+            } as Tone
+            (this.tones.set(local, tone))
+            prepareTone()
         }
     }
 
@@ -139,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+                            target: RecyclerView.ViewHolder
         ): Boolean {(this@MainActivity.rvMainTones.adapter as MyAdapter).mov(viewHolder.adapterPosition, target.adapterPosition)
             return true
         }
